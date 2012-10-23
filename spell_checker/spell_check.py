@@ -10,6 +10,7 @@ class Spelling:
     self.obs  = obs
     self.size = len(obs)
     self.words = file("words").read()
+    self.fallback = [] #fallback to store deletions, when no candidate is found
 
     #for regex matching
     self.alphabets = "[a-zA-Z'-]{1,3}" #all aphabets including apostrophe and hyphen
@@ -44,7 +45,10 @@ class Spelling:
       regexes.append(operations.insert(obs, i, self.alphabets)) #insertion candidates
       if(i<size):
         regexes.append(operations.sub(obs, i, self.alphabets)) #substituition candidates
-        regexes.append(operations.delete(obs, i))#deletion candidates
+        d = operations.delete(obs, i)
+        regexes.append(d)#deletion candidates
+        #send deletion to fallbacks as well
+        self.fallback.append(d)
     regexes += operations.all_trans(obs) #transposition candidates
     pattern = "|".join(regexes)
     candidates = list( set( re.findall(pattern, self.words) ) ) #set removes duplicates
@@ -65,13 +69,21 @@ class Spelling:
     """
     Return first element with min edit distance because
     freq. analysis. in unigram does not make sens 
+
+    @return list()
+      >>>one elementic implies auto correct
+      >>>one+ elementic implies suggestions
     """
     candidates = self.edit_distances()
     if(len(candidates) > 0):
       correction = min(candidates.values())
+      #print candidates
       for w in candidates.keys():
         if(candidates[w] == correction):
-          return w
+          return list(w)
     else:
-      #no match found, try with last letter stripped
-      return Spelling(self.obs[0:self.size-1]).correct()
+      #no match found, fallback
+      rescue = {}
+      for w in self.fallback:
+        rescue.update(Spelling(w).candidate_set())
+      return rescue.keys()
