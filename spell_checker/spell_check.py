@@ -12,7 +12,7 @@ class Spelling:
     self.words = file("words").read()
 
     #for regex matching
-    self.alphabets = "[a-zA-Z']" #all aphabets including apostrophe
+    self.alphabets = "[a-zA-Z'-]{1,3}" #all aphabets including apostrophe and hyphen
 
     return None
 
@@ -67,7 +67,11 @@ class Spelling:
     freq. analysis. in unigram does not make sens 
     """
     candidates = self.edit_distances()
-    correction = min(candidates.values())
-    for w in candidates.keys():
-      if(candidates[w] == correction):
-        return w
+    if(len(candidates) > 0):
+      correction = min(candidates.values())
+      for w in candidates.keys():
+        if(candidates[w] == correction):
+          return w
+    else:
+      #no match found, try with last letter stripped
+      return Spelling(self.obs[0:self.size-1]).correct()
