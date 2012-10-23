@@ -1,18 +1,19 @@
+import re, operations, dl_edit_distance
+
 class Spelling:
   def __init__(self, obs):
     """
       Create a spelling observation for processing.
-      NOISY CHANNEL ALGORITIHM with step 2 modified.
+      NOISY BOX ALGORITIHM 
+      A noisy channel with step 2 modified.
     """
     self.obs  = obs
     self.size = len(obs)
+    self.words = file("words").read()
 
     #for regex matching
-    self.alphabets = "[a-z]"
-    self.alpha_a = "[a-z']" #alphabets including apostrophe
+    self.alphabets = "[a-zA-Z']" #all aphabets including apostrophe
 
-    #imports 
-    import re
     return None
 
   def candidate_set(self):
@@ -34,32 +35,39 @@ class Spelling:
     @param None
     @return dict with each key mapping to 0
     """
-    obs = list(self.obs)
+    obs = self.obs
     size = self.size
     regexes = []
 
     #iterate over list and generate regexes
-    i,j = 0,0
-    while(i<=size):
-      temp = '' #an empty string to populate regex
-      while(j<i):
-        temp += obs[j]
-        j+=1
+    for i in range(0, size+1):
+      regexes.append(operations.insert(obs, i, self.alphabets)) #insertion candidates
+      if(i<size):
+        regexes.append(operations.sub(obs, i, self.alphabets)) #substituition candidates
+        regexes.append(operations.delete(obs, i))#deletion candidates
+    regexes += operations.all_trans(obs) #transposition candidates
+    pattern = "|".join(regexes)
+    candidates = list( set( re.findall(pattern, self.words) ) ) #set removes duplicates
+    c_set = {}
+    [c_set.update({w:0}) for w in candidates]
+    return c_set
 
-      temp += self.alphabets
-
-      while(j < size):
-        temp += obs[j]
-        j+=1
-      regexes.append(temp)
-      i+=1
-      j=0
-
-    return regexes
-
-  def edit_distance(self):
+  def edit_distances(self):
     """
       Calc. Demaro Levenstein edit distance between obs. and candidate set
     """
-    pass
+    candidate_set = self.candidate_set()
+    for w in candidate_set.keys():
+      candidate_set[w] = dl_edit_distance.dl(self.obs, w)
+    return candidate_set
 
+  def correct(self):
+    """
+    Return first element with min edit distance because
+    freq. analysis. in unigram does not make sens 
+    """
+    candidates = self.edit_distances()
+    correction = min(candidates.values())
+    for w in candidates.keys():
+      if(candidates[w] == correction):
+        return w
