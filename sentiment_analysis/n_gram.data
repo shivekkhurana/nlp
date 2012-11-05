@@ -1,0 +1,12 @@
+#word(\t)polarity(\n)
+
+#1 gram
+made,1
+sad,-1
+good,1
+unpredictable,1
+
+#2 grams
+undpredictable movie,1
+unpredictable device,-1
+undpredictable  mp3,-1
