@@ -5,6 +5,8 @@ made,1
 sad,-1
 good,1
 unpredictable,1
+spoiled,-1
+kill,-1
 
 #2 grams
 undpredictable movie,1

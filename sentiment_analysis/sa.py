@@ -9,21 +9,22 @@ def train(corpus):
   @param:
     name of file containg n-gram data(+ tweets)
   @return:
-    list() of tuples
-    ex: [("spoiled",-1,...), ("unpredicatable movie",1,...)]
+    dict()
+    ex: {"spoiled":"-1,...","unpredicatable movie":"1,..."}
       first element of tuple is n-gram entity
       next is polarity : maybe -1, 1, 0
   '''
   f = open(corpus)
-  n_gram = []
+  n_gram = {}
   #iterate over file to populate n_grams
   while True:
     line = f.readline()
     if not line: break
+    #omit comments and spaces
     if line[0] != '#' and line != '\n':
       #line is a list now
       line = line.strip().split(',')
-      n_gram.append( (line[0], line[1]) )
+      n_gram[line[0]]=line[1]
   return n_gram
 
 def sentence_gram(raw_sentence):
@@ -51,6 +52,17 @@ def sentence_gram(raw_sentence):
       pass
 
   return cnt
+
+def analyse(sentence=None):
+  if not sentence: sentence = raw_input(">")
+  sg = sentence_gram( sentence )
+  brain = train('n_gram.txt')
+  polarity = 0
+  for word in sg:
+    if brain.has_key(word):
+      polarity += brain[word]
+  return polarity
+  	
 
 if __name__ == "__main__":
   print train("n_gram.txt")

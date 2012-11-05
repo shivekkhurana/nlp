@@ -80,10 +80,18 @@ class Spelling:
       #print candidates
       for w in candidates.keys():
         if(candidates[w] == correction):
-          return list(w)
+          return w
     else:
       #no match found, fallback
       rescue = {}
       for w in self.fallback:
         rescue.update(Spelling(w).candidate_set())
       return rescue.keys()
+
+def main():
+  while True:
+    obs = raw_input("Enter observation : ")
+    print Spelling(obs).correct()
+
+if __name__ == '__main__':
+    main()
