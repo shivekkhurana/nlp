@@ -1,69 +1,87 @@
 #!/usr/bin/python
 
 import collections
+from n_gram_iterators import *
 
-def train(corpus):
-  '''
-  Populate training data into memory.
+class Brain:
+  def __init__(self,corpus):
+    '''
+    Populate training data into memory.
 
-  @param:
-    name of file containg n-gram data(+ tweets)
-  @return:
-    dict()
-    ex: {"spoiled":"-1,...","unpredicatable movie":"1,..."}
-      first element of tuple is n-gram entity
-      next is polarity : maybe -1, 1, 0
-  '''
-  f = open(corpus)
-  n_gram = {}
-  #iterate over file to populate n_grams
-  while True:
-    line = f.readline()
-    if not line: break
-    #omit comments and spaces
-    if line[0] != '#' and line != '\n':
-      #line is a list now
-      line = line.strip().split(',')
-      n_gram[line[0]]=line[1]
-  return n_gram
+    @param:
+      name of file containg n-gram data(+ tweets)
+    @return:
+      list() of tuples
+      ex: [("spoiled","-1,...") ,("unpredicatable", "movie", "1,...")]
+        last element of tuple is a comma seperated string mapping ("",..., "<polarity>, ...")
+    '''
+    f = open(corpus)
+    b = []
+    #iterate over file to populate n_grams into brain
+    while True:
+      line = f.readline()
+      if not line: break
+      #omit comments and newlines
+      if line[0] != '#' and line != '\n':
+        #line is a list now
+        line = line.strip().split(',')
+        b.append(tuple(line))
+    self.data = b
+
+  def has_key(self, key):
+    #key here is a tuple of words
+    pass
+
+  def polarity(self, ngram):
+    '''
+    Analyse corpus and return a polarity matching the give ngram.
+
+    @param:
+      tuple()
+    @return:
+      int -1, 0 or 1
+    '''
+    for knowledge in self.data:
+      #here knowlede is a tuple
+      #print set(ngram), set(knowledge[0:-1]), '=>',knowledge[-1],'\n' 
+      if ( set(ngram) == set(knowledge[0:-1]) )  :
+        #strip polarity away and make sets so order doen not matter
+        print set(ngram), set(knowledge[0:-1]), '=>',knowledge[-1],'\n'
+        return int(knowledge[-1])
+    return 0
 
 def sentence_gram(raw_sentence):
   '''
   N-gram(ize) a sentence and try matching with corpus.
+  //currently, we do 1,2 & 3-gram
 
   @param:
     raw sentence
   @return:
-    collections.Counter object, containg occurence of 
-    >3 letter word in raw_sentence. This insures that 
-    and, is, to, etc. are ignored.
+    list of tuples
   '''
-  cnt = collections.Counter()
+  sg = list()
   w_list = raw_sentence.split(' ')
-  for word in w_list:
-    if len(word)>3:
-      #1 gram
-      cnt[word] += 1
+  n = NgramIterators()
+  for i in range(1,4):
+    sg += n.ngrams(w_list, i)
 
-    #2 gram
-    try:
-      cnt[word + ' ' + w_list[ w_list.index(word) + 1] ] += 1
-    except IndexError, e:
-      pass
+  return sg
 
-  return cnt
-
-def analyse(sentence=None):
+def analyse(sentence=None, corpus='corpus.txt'):
   if not sentence: sentence = raw_input(">")
   sg = sentence_gram( sentence )
-  brain = train('n_gram.txt')
+  brain = Brain(corpus)
   polarity = 0
-  for word in sg:
-    if brain.has_key(word):
-      polarity += brain[word]
+  for ngram in sg:
+    #here ngram is a tuple of 1,2 or 3 gram
+    polarity += brain.polarity(ngram)
+    #print ngram, brain.polarity(ngram), '\n'
+
   return polarity
   	
 
 if __name__ == "__main__":
-  print train("n_gram.txt")
-  print sentence_gram("to infinity and beyond")
+  #print Brain("corpus.txt").polarity(("made",))
+  #print sentence_gram("the mp3 is unpredicatable")
+  print analyse("the mp3 is unpredicatable")

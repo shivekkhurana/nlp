@@ -7,8 +7,9 @@ good,1
 unpredictable,1
 spoiled,-1
 kill,-1
+great,1
 
 #2 grams
-undpredictable movie,1
-unpredictable device,-1
-undpredictable  mp3,-1
+undpredictable,movie,1
+unpredictable,device,-1
+undpredictable ,mp3,-1
