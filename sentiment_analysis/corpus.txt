@@ -1,4 +1,4 @@
-#word(\t)polarity(\n)
+#word,polarity(\n)
 
 #1 gram
 made,1
@@ -8,8 +8,15 @@ unpredictable,1
 spoiled,-1
 kill,-1
 great,1
+killed,-1
+bad,-1
+awesome,1
+bhandu,1
 
 #2 grams
 undpredictable,movie,1
 unpredictable,device,-1
-undpredictable ,mp3,-1
+unpredictable,mp3,-1
+rahul,mad,1
+shivek,awesome,1
+rahul,awesome,-1

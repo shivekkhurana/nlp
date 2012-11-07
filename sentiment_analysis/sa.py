@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import collections
-from n_gram_iterators import *
+import collections, itertools
+#from n_gram_iterators import *
 
 class Brain:
   def __init__(self,corpus):
@@ -46,7 +46,7 @@ class Brain:
       #print set(ngram), set(knowledge[0:-1]), '=>',knowledge[-1],'\n' 
       if ( set(ngram) == set(knowledge[0:-1]) )  :
         #strip polarity away and make sets so order doen not matter
-        print set(ngram), set(knowledge[0:-1]), '=>',knowledge[-1],'\n'
+        #print set(ngram), set(knowledge[0:-1]), '=>',knowledge[-1],'\n'
         return int(knowledge[-1])
     return 0
 
@@ -62,10 +62,8 @@ def sentence_gram(raw_sentence):
   '''
   sg = list()
   w_list = raw_sentence.split(' ')
-  n = NgramIterators()
-  for i in range(1,4):
-    sg += n.ngrams(w_list, i)
-
+  for i in range(1,3):
+    sg += list(itertools.permutations(w_list, i))
   return sg
 
 def analyse(sentence=None, corpus='corpus.txt'):
@@ -73,6 +71,7 @@ def analyse(sentence=None, corpus='corpus.txt'):
   sg = sentence_gram( sentence )
   brain = Brain(corpus)
   polarity = 0
+  print '\n\n'
   for ngram in sg:
     #here ngram is a tuple of 1,2 or 3 gram
     polarity += brain.polarity(ngram)
@@ -84,4 +83,5 @@ def analyse(sentence=None, corpus='corpus.txt'):
 if __name__ == "__main__":
   #print Brain("corpus.txt").polarity(("made",))
   #print sentence_gram("the mp3 is unpredicatable")
-  print analyse("the mp3 is unpredicatable")
+  while(1):
+    print analyse()
