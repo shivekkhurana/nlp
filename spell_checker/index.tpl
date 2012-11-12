@@ -56,12 +56,14 @@ div.Ohno {
 	padding:6px 24px;
 	text-decoration:none;
 	text-shadow:1px 1px 0px #ffffff;
-}.myButton:hover {
+}
+.myButton:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
 	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
 	background-color:#dfdfdf;
-}.myButton:active {
+}
+.myButton:active {
 	position:relative;
 	top:1px;
 }
@@ -71,18 +73,27 @@ ul li{
 }
 ul{
 
-	border-top:1px dashed #999;
+	border-top:2px solid #eee;
 	padding-top:20px;
 	color:#333;
 	text-align: left;
 	width:400px;
 	margin:20px auto;
 }
+input[type="text"]{
+	border:2px solid #a1dde5;
+	outline:none;
+}
+
+input[type="text"]:focus{
+	border:2px solid #3ab;
+}
+
 
 		</style>
 	</head>
 	<div class="container">
-	<div class="Ohno">OH NO <span class="red">!</span><br/>NOT YOU AGAIN<br/><h3>SPELL CHECKER</h3></div>
+	<div class="Ohno"><span class="red">!</span><br/><h3>SPELL CHECKER</h3></div>
 		<form action="/correct" method="post">
 	 		<input type="text" id="observation" name="observation"></input>
 	 		<br>
