@@ -80,7 +80,7 @@ class Spelling:
       #print candidates
       for w in candidates.keys():
         if(candidates[w] == correction):
-          return w
+          return [w]
     else:
       #no match found, fallback
       rescue = {}
