@@ -89,6 +89,7 @@ class Spelling:
       return rescue.keys()
 
 def main():
+  print Spelling('acress').edit_distances()
   while True:
     obs = raw_input("Enter observation : ")
     print Spelling(obs).correct()

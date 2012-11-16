@@ -71,15 +71,17 @@ ul li{
 
 	list-style:none;
 }
-ul{
+table{margin:0;padding:0;}
+ul,table{
 
 	border-top:2px solid #eee;
-	padding-top:20px;
+	padding:20px;
 	color:#333;
 	text-align: left;
 	width:400px;
 	margin:20px auto;
 }
+table{text-align: center;}
 input[type="text"]{
 	border:2px solid #a1dde5;
 	outline:none;
@@ -99,13 +101,36 @@ input[type="text"]:focus{
 	 		<br>
 	 		<input type="submit" value="correct" class="myButton">
 		</form>
-
+		<h4>Optimal Correction(s)</h4>	
 		<ul id="corrections">
-			
+						
 				%for c in corrections:
     			<li>{{c}}</li>
   				%end
   			
 		</ul>
+		<table id="suggestions">
+			<tr>
+				<h4>All Suggestions</h4>
+			</tr>
+			<tr>
+				<th>
+					Word
+				</th>
+				<th>
+					Levenstein Edit Distance
+				</th>
+			</tr>
+			%for k,v in suggestions.items():
+			<tr>
+				<td>
+					{{k}}
+				</td>
+				<td>
+					{{v}}
+				</td>
+			</tr>
+			%end
+		</table>
 	</div>
 </html>

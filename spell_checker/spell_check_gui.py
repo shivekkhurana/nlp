@@ -5,14 +5,15 @@ def index():
 	'''
 	Show form to input spelling observation
 	'''
-	return template('index', corrections=[])
+	return template('index', corrections=[], suggestions={})
 
 @route('/correct', method="post")
 def correct():
 	if request.POST.get('observation','').strip():
 		obs = request.POST.get('observation', '').strip()
 		#return spell_check.Spelling(obs).correct()
-		return template('index',corrections = spell_check.Spelling(obs).correct())
+		a = spell_check.Spelling(obs)
+		return template('index',corrections = a.correct(), suggestions=a.edit_distances())
 	else:
 		redirect('/')
 debug(True)
