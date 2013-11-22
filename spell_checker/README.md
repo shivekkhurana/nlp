@@ -12,6 +12,6 @@ and visit http://127.0.0.1:8080/ in your browser
 for api :
 <pre>
 from spell_check import Spelling
-incorrect = Spelling("acress")
-correct   = incorrect.correct() # will return a string or list
+observation = Spelling("acress")
+correct     = observation.correct() # will return a string or list
 </pre>
